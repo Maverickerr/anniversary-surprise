@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .hidden { display: none; }
+        #countdown { font-size: 2em; }
+        .balloons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            width: 50px;
+            height: 70px;
+            background-color: red;
+            border-radius: 50%;
+            animation: floatUp 5s linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100vh); }
+        }
+    </style>
+</head>
+<body>
+    <div id="surprise-message">Surprise is waiting...</div>
+    <div id="countdown" class="hidden"></div>
+    <div id="anniversary-page" class="hidden">
+        <h1>Happy Anniversary, My Love! 🎉🎈</h1>
+        <div class="balloons"></div>
+    </div>
+
+    <script>
+        function startCountdown() {
+            let now = new Date();
+            let eventTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 0);
+            let timer = setInterval(function() {
+                let currentTime = new Date();
+                let diff = eventTime - currentTime;
+                if (diff <= 0) {
+                    clearInterval(timer);
+                    document.getElementById("countdown").classList.add("hidden");
+                    document.getElementById("anniversary-page").classList.remove("hidden");
+                    showBalloons();
+                } else {
+                    let minutes = Math.floor((diff / 1000 / 60) % 60);
+                    let seconds = Math.floor((diff / 1000) % 60);
+                    document.getElementById("countdown").innerHTML = `Surprise in ${minutes}m ${seconds}s`;
+                }
+            }, 1000);
+        }
+        
+        function showBalloons() {
+            let balloonContainer = document.querySelector(".balloons");
+            for (let i = 0; i < 20; i++) {
+                let balloon = document.createElement("div");
+                balloon.className = "balloon";
+                balloon.style.left = Math.random() * 100 + "%";
+                balloon.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                balloon.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                balloonContainer.appendChild(balloon);
+            }
+        }
+
+        let now = new Date();
+        if (now.getHours() === 23 && now.getMinutes() >= 55) {
+            document.getElementById("surprise-message").classList.add("hidden");
+            document.getElementById("countdown").classList.remove("hidden");
+            startCountdown();
+        }
+    </script>
+</body>
+</html>
